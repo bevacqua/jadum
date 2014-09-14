@@ -2,11 +2,10 @@
 
 'use strict';
 
-throw 'interpret options, pass to jade';
-
 var argv = require('minimist')(process.argv.slice(2));
 var fs = require('fs');
 var path = require('path');
+var glob = require('glob');
 var contra = require('contra');
 var mkdirp = require('mkdirp');
 var monocle = require('monocle')();
@@ -23,6 +22,10 @@ if (argv.obj) {
 options.compileDebug = argv.debug;
 options.out = argv.out || argv.o;
 options.pretty = argv.pretty || argv.p;
+
+if (files.length === 1 && files[0].indexOf('*') !== -1) {
+  files = glob.sync(files[0]); // `npm run` doesn't expand the pattern :(
+}
 
 files.forEach(renderFile);
 
@@ -52,21 +55,25 @@ function renderFile (file, done) {
   ], done);
 
   function render (next) {
+    var prefix = 'var jade = require("jade/runtime");\nmodule.exports = ';
+    var fn;
+
     contra.waterfall([
       function (next) {
         fs.readFile(file, 'utf8', next);
       },
       function (data, next) {
-        var fn = jade.compileClient(data, options);
+        options.filename = file;
+        fn = jade.compileClient(data, options);
         file = file.replace(re, extname);
         if (options.out) {
           file = path.join(options.out, file);
         }
         var dir = path.resolve(path.dirname(file));
-        mkdirp(dir, 0755, next);
+        mkdirp(dir, next);
       },
       function (next) {
-        fs.writeFile(file, fn, next);
+        fs.writeFile(file, prefix + fn, 'utf8', next);
       }
     ], next);
   }

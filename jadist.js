@@ -3,6 +3,7 @@
 var jade = require('jade');
 var Compiler = require('./Compiler');
 var Parser = require('./Parser');
+var api = {};
 
 function compileClient (text, o) {
   var options = o;
@@ -11,9 +12,15 @@ function compileClient (text, o) {
   }
   options.compiler = Compiler;
   options.parser = Parser;
-  return 'module.exports = ' jade.compileClient(text, options).replace();
+  return jade.compileClient(text, options).replace();
 }
 
-module.exports = {
-  compileClient: compileClient
-};
+function map (key) {
+  api[key] = jade[key];
+}
+
+Object.keys(jade).forEach(map);
+
+api.compileClient = compileClient;
+
+module.exports = api;

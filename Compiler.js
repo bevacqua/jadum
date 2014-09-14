@@ -56,3 +56,5 @@ Compiler.prototype.visitEach = function (each) {
     + '  locals["' + each.val + '"] = $$local;\n'
     + '  }\n}).call(this);\n');
 };
+
+module.exports = Compiler;
