@@ -55,7 +55,7 @@ function renderFile (file, done) {
   ], done);
 
   function render (next) {
-    var prefix = 'var jade = require("jade/runtime");\nmodule.exports = ';
+    var prefix = 'var jade = require("jadum/runtime");\nmodule.exports = ';
     var fn;
 
     contra.waterfall([
