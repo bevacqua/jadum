@@ -1,0 +1,93 @@
+#!/usr/bin/env node
+
+'use strict';
+
+throw 'interpret options, pass to jade';
+
+var argv = require('minimist')(process.argv.slice(2));
+var fs = require('fs');
+var path = require('path');
+var contra = require('contra');
+var mkdirp = require('mkdirp');
+var monocle = require('monocle')();
+var jade = require('..');
+var files = argv._;
+var extname = '.js';
+var re = /\.jade$/;
+var options = {};
+
+if (argv.obj) {
+  options = JSON.parse(argv.obj);
+}
+
+options.compileDebug = argv.debug;
+options.out = argv.out || argv.o;
+options.pretty = argv.pretty || argv.p;
+
+files.forEach(renderFile);
+
+if (argv.watch) {
+  monocle.watchFiles({
+    files: files,
+    listener: listener
+  });
+}
+
+process.on('exit', function () {
+  console.log();
+});
+
+function renderFile (file, done) {
+  contra.waterfall([
+    function (next) {
+      fs.lstat(file, next);
+    },
+    function (stat, next) {
+      if (stat.isFile() && re.test(file)) {
+        render(next);
+      } else if (stat.isDirectory()) {
+        dir(next);
+      }
+    }
+  ], done);
+
+  function render (next) {
+    contra.waterfall([
+      function (next) {
+        fs.readFile(file, 'utf8', next);
+      },
+      function (data, next) {
+        var fn = jade.compileClient(data, options);
+        file = file.replace(re, extname);
+        if (options.out) {
+          file = path.join(options.out, file);
+        }
+        var dir = path.resolve(path.dirname(file));
+        mkdirp(dir, 0755, next);
+      },
+      function (next) {
+        fs.writeFile(file, fn, next);
+      }
+    ], next);
+  }
+
+  function dir (next) {
+    contra.waterfall([
+      function (next) {
+        fs.readdir(file, next);
+      },
+      function (files, next) {
+        contra.each(files.map(expand), renderFile, next);
+      }
+    ], next);
+  }
+
+  function expand (filename) {
+    return file + '/' + filename;
+  }
+}
+
+function listener (file) {
+  var relative = path.relative(process.cwd(), file.absolutePath);
+  renderFile(relative);
+}

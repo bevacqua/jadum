@@ -1,0 +1,23 @@
+{
+  "name": "jadist",
+  "description": "A lean Jade compiler that understands Browserify and reuses partials",
+  "version": "0.1.0",
+  "homepage": "https://github.com/bevacqua/jadist",
+  "author": {
+    "name": "Nicolas Bevacqua",
+    "email": "nico@bevacqua.io",
+    "url": "http://bevacqua.io"
+  },
+  "main": "jadist.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bevacqua/jadist.git"
+  },
+  "bin": {
+    "jadist": "bin/jadist"
+  },
+  "dependencies": {
+    "jade": "^1.6.0"
+  }
+}
