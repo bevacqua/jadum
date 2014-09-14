@@ -1,4 +1,4 @@
-# jadist
+# jadum
 
 > A lean Jade compiler that understands Browserify and reuses partials
 
@@ -10,12 +10,12 @@ module.exports = function (model) {
 }
 ```
 
-The other difference is that the traditional Jade compiler inlines partials when it finds `include` statements, whereas `jadist` uses `require` statements to reuse partials, saving precious bytes in client-side code.
+The other difference is that the traditional Jade compiler inlines partials when it finds `include` statements, whereas `jadum` uses `require` statements to reuse partials, saving precious bytes in client-side code.
 
 ## Install
 
 ```shell
-npm install -S jadist
+npm install -S jadum
 ```
 
 ## CLI
@@ -23,7 +23,7 @@ npm install -S jadist
 The CLI works the same way as the one in `jade`, but it always compiles views for the client-side, as Common.JS modules.
 
 ```shell
-jadist views/**/*.jade -o .bin --no-debug --obj '{"basedir":"views"}'
+jadum views/**/*.jade -o .bin --no-debug --obj '{"basedir":"views"}'
 ```
 
 ## API
