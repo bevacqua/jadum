@@ -1,8 +1,10 @@
 'use strict';
 
+var path = require('path');
 var jade = require('jade');
 var Compiler = require('./Compiler');
 var Parser = require('./Parser');
+var camelCase = require('./camelCase');
 var api = {};
 
 function compileClient (text, o) {
@@ -12,7 +14,11 @@ function compileClient (text, o) {
   }
   options.compiler = Compiler;
   options.parser = Parser;
-  return jade.compileClient(text, options).replace();
+  return jade.compileClient(text, options).replace('template', name(options.filename));
+}
+
+function name (file) {
+  return camelCase(path.basename(file, '.jade'));
 }
 
 function map (key) {
