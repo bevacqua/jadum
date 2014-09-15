@@ -7,16 +7,16 @@ var util = require('util');
 var nodes = jade.nodes;
 var BaseParser = jade.Parser;
 
-function Parser () {
+function Parser (a,b,c) {
   BaseParser.apply(this, arguments);
 }
 
 util.inherits(Parser, BaseParser);
 
 Parser.prototype.parseInclude = function () {
-  var tok = this.expect('include');
-  var file = this.resolvePath(tok.val.trim(), 'include');
-  var mod = path.resolve(this.options.out, path.dirname(file), path.basename(file, '.jade') + '.js');
+  var tok = this.expect('include').val.trim();
+  var file = this.resolvePath(tok, 'include');
+  var mod = tok.indexOf('.') === 0 ? tok : './' + tok;
 
   this.dependencies.push(file);
 
