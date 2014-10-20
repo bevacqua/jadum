@@ -17,6 +17,10 @@
   "bin": {
     "jadum": "bin/jadum"
   },
+  "scripts": {
+    "compare": "mkdir -p test/compiled && jadum test/fixture/listing.jade && mv test/fixture/listing.js test/compiled/listing.jadum.js && jade test/fixture/listing.jade --client --no-debug && mv test/fixture/listing.js test/compiled/listing.jade.js",
+    "test": "node test/*.js"
+  },
   "dependencies": {
     "contra": "^1.6.10",
     "glob": "^4.0.5",
@@ -24,5 +28,9 @@
     "minimist": "^1.1.0",
     "mkdirp": "^0.5.0",
     "monocle": "^1.1.51"
+  },
+  "devDependencies": {
+    "jade": "^1.7.0",
+    "tape": "^3.0.1"
   }
 }
