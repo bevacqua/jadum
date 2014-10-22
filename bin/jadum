@@ -96,5 +96,6 @@ function renderFile (file, done) {
 
 function listener (file) {
   var relative = path.relative(process.cwd(), file.absolutePath);
+  console.log('jadum: Changes detected in %s, recompiling.', relative);
   renderFile(relative);
 }
