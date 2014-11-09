@@ -19,7 +19,7 @@ if (argv.obj) {
   options = JSON.parse(argv.obj);
 }
 
-options.compileDebug = argv.debug;
+options.compileDebug = argv.debug !== false;
 options.out = argv.out || argv.o;
 options.pretty = argv.pretty || argv.p;
 
