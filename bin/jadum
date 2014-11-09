@@ -15,6 +15,13 @@ var extname = '.js';
 var re = /\.jade$/;
 var options = {};
 
+// worth a shot, tell jade it can use ultramarked for this thing
+try {
+  var transformers = require('jade/node_modules/transformers');
+  transformers.markdown.engines.push('ultramarked');
+} catch (e) {
+}
+
 if (argv.obj) {
   options = JSON.parse(argv.obj);
 }
