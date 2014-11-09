@@ -23,7 +23,7 @@ npm install -S jadum
 The CLI works the same way as the one in `jade`, but it always compiles views for the client-side, as Common.JS modules.
 
 ```shell
-jadum views/**/*.jade -o .bin --no-debug --obj '{"basedir":"views"}'
+jadum views/**/* -o .bin
 ```
 
 ## API
