@@ -4,7 +4,7 @@
 
 var argv = require('minimist')(process.argv.slice(2), {
   alias: {
-    output: ['o', 'obj'],
+    output: ['o', 'out'],
     pretty: 'p',
     watch: 'w'
   }
