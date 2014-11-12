@@ -2,7 +2,13 @@
 
 'use strict';
 
-var argv = require('minimist')(process.argv.slice(2));
+var argv = require('minimist')(process.argv.slice(2), {
+  alias: {
+    out: 'o',
+    pretty: 'p',
+    watch: 'w'
+  }
+});
 var fs = require('fs');
 var path = require('path');
 var glob = require('glob');
