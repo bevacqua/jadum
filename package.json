@@ -1,7 +1,7 @@
 {
   "name": "jadum",
   "description": "A lean Jade compiler that understands Browserify and reuses partials",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "homepage": "https://github.com/bevacqua/jadum",
   "author": {
     "name": "Nicolas Bevacqua",
