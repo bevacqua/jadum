@@ -22,7 +22,7 @@
     "test": "node test/*.js"
   },
   "dependencies": {
-    "contra": "^1.6.10",
+    "contra": "^1.7.0",
     "glob": "^4.0.5",
     "jade": "^1.7.0",
     "minimist": "^1.1.0",

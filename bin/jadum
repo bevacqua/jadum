@@ -40,7 +40,7 @@ if (files.length === 1 && files[0].indexOf('*') !== -1) {
   files = glob.sync(files[0]); // `npm run` doesn't expand the pattern :(
 }
 
-files.forEach(renderFile);
+contra.each(files, renderFile);
 
 if (argv.watch) {
   monocle.watchFiles({
@@ -48,10 +48,6 @@ if (argv.watch) {
     listener: listener
   });
 }
-
-process.on('exit', function () {
-  console.log();
-});
 
 function renderFile (file, done) {
   contra.waterfall([
@@ -63,11 +59,13 @@ function renderFile (file, done) {
         render(next);
       } else if (stat.isDirectory()) {
         dir(next);
+      } else {
+        next();
       }
     }
   ], done);
 
-  function render (next) {
+  function render (done) {
     var prefix = 'var jade = require("jadum/runtime");\nmodule.exports = ';
     var fn;
 
@@ -88,10 +86,10 @@ function renderFile (file, done) {
       function (next) {
         fs.writeFile(file, prefix + fn, 'utf8', next);
       }
-    ], next);
+    ], done);
   }
 
-  function dir (next) {
+  function dir (done) {
     contra.waterfall([
       function (next) {
         fs.readdir(file, next);
@@ -99,7 +97,7 @@ function renderFile (file, done) {
       function (files, next) {
         contra.each(files.map(expand), renderFile, next);
       }
-    ], next);
+    ], done);
   }
 
   function expand (filename) {
