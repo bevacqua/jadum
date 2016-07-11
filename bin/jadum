@@ -55,7 +55,7 @@ function renderFile (file, done) {
       fs.lstat(file, next);
     },
     function (stat, next) {
-      if (stat.isFile() && re.test(file)) {
+      if ((stat.isFile() || stat.isSymbolicLink()) && re.test(file)) {
         render(next);
       } else if (stat.isDirectory()) {
         dir(next);
