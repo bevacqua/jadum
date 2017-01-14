@@ -24,7 +24,7 @@ var options = {};
 // worth a shot, tell jade it can use ultramarked for this thing
 try {
   var transformers = require('jade/node_modules/transformers');
-  transformers.markdown.engines.push('ultramarked');
+  transformers.markdown.engines.push('megamark');
 } catch (e) {
 }
 
@@ -69,24 +69,28 @@ function renderFile (file, done) {
     var prefix = 'var jade = require("jadum/runtime");\nmodule.exports = ';
     var fn;
 
-    contra.waterfall([
-      function (next) {
-        fs.readFile(file, 'utf8', next);
-      },
-      function (data, next) {
-        options.filename = file;
-        fn = jade.compileClient(data, options);
-        file = file.replace(re, extname);
-        if (options.out) {
-          file = path.join(options.out, file);
-        }
-        var dir = path.resolve(path.dirname(file));
-        mkdirp(dir, next);
-      },
-      function (next) {
-        fs.writeFile(file, prefix + fn, 'utf8', next);
+    fs.readFile(file, 'utf8', gotData);
+
+    function gotData (err, data) {
+      if (err) {
+        done(err); return;
       }
-    ], done);
+      options.filename = file;
+      fn = jade.compileClient(data, options);
+      file = file.replace(re, extname);
+      if (options.out) {
+        file = path.join(options.out, file);
+      }
+      var dir = path.resolve(path.dirname(file));
+      mkdirp(dir, ensuredDir);
+    }
+
+    function ensuredDir (err) {
+      if (err) {
+        done(err); return;
+      }
+      fs.writeFile(file, prefix + fn, 'utf8', done);
+    }
   }
 
   function dir (done) {
